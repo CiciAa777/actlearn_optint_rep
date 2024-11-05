@@ -43,6 +43,9 @@ def run(problem, opts):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 
+	# my edit: Add the time argument
+	parser.add_argument('--time', action='store_true', help='Flag to time the execution (store true).')
+
 	# synthetic instances
 	parser.add_argument('--num_instances', type=int, default=10, help='Number of instances generated (int).')
 	parser.add_argument('--diff_DAGs', action='store_true', help='Use the same DAG across instances (store true)')
@@ -60,7 +63,7 @@ if __name__ == '__main__':
 	parser.add_argument('--total_time_step', type=int, default=50, help='Total number of time steps')
 	parser.add_argument('--warm_up_step', type=int, default=0, help='Number of warm up steps')
 	parser.add_argument('--repeat_runs', type=int, default=20, help='Number of repeated runs')
-	parser.add_argument('--unknown_variance', action='store_false', help='Condition on known variances (store_false)')
+	parser.add_argument('--unknown_variance', action='store_false', help='Condition on known variances (store_false).')
 
 	# saved directory
 	parser.add_argument('--save_dir', default='results/', help="Saving directory.")
@@ -69,7 +72,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	if args.a_target is not None:
 		assert len(args.a_target)==args.a_size, 'Unmatched numbers of perturbation targets.'
-	assert args.total_time_step > args.warm_up_step, 'Total time steps must be larger than warm up steps.'
+		assert args.total_time_step > args.warm_up_step, 'Total time steps must be larger than warm up steps.'
 
 	# saved file name
 	std = '-std' if args.std else ''
@@ -87,8 +90,9 @@ if __name__ == '__main__':
 		W=args.warm_up_step, 
 		R=args.repeat_runs, 
 		known_noise=args.unknown_variance, 
-		measure=args.civ_measure
-		)
+		measure=args.civ_measure,
+		time=args.time  # my edit：Include the time option here
+    )
 	with open('{}/args.json'.format(savedir), 'w') as f:
 		json.dump(vars(opts), f, indent=True)
 

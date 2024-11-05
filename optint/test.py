@@ -69,6 +69,7 @@ def test_active(problem, opts):
 			x01 = np.maximum(np.minimum(a_jitter, 1), -1)
 
 			x02 = problem.mu_target - np.matmul(mean, problem.mu_target)
+			x02 = x02.ravel()  #my edit to address 'x0 must have 1 dimension error'
 			x02 = x02 / np.linalg.norm(x02)
 
 			a1 = acquisition.optimize(x0=x01)
